@@ -1,0 +1,16 @@
+# Node / TypeScript build artifacts
+node_modules/
+dist/
+*.log
+
+# Ionic / Angular build output
+mobile-app/www
+mobile-app/node_modules/
+
+# IDE files
+.DS_Store
+.idea/
+*.iml
+
+# Local release documentation (not committed)
+release_notes_v1.0.txt

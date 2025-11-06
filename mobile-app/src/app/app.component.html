@@ -1,0 +1,94 @@
+<ion-app>
+  <ion-content class="ion-padding">
+    <div class="dashboard" *ngIf="snapshot$ | async as snapshot">
+      <h1 class="title">Civilisation Pulse</h1>
+      <p class="subtitle">Tick {{ snapshot.tick }}</p>
+
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Core Metrics</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="metrics">
+            <div class="metric" *ngFor="let entry of snapshot.metrics | keyvalue">
+              <span class="metric__label">{{ entry.key }}</span>
+              <span class="metric__value">{{ entry.value | number: '1.0-1' }}</span>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card *ngIf="board$ | async as board">
+        <ion-card-header>
+          <ion-card-title>Puzzle State</ion-card-title>
+          <ion-card-subtitle>Cascades: {{ board.cascades }}</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="board">
+            <div class="board-row" *ngFor="let row of board.grid; index as rowIndex">
+              <button
+                type="button"
+                class="board-tile"
+                *ngFor="let tile of row; index as colIndex"
+                [attr.data-kind]="tile.kind"
+                [class.board-tile--selected]="isSelected(rowIndex, colIndex)"
+                [class.board-tile--swapping]="isSwapping(rowIndex, colIndex)"
+                [class.board-tile--invalid]="isInvalid(rowIndex, colIndex)"
+                [class.board-tile--falling]="isFalling(tile)"
+                [class.board-tile--candidate]="isCandidate(rowIndex, colIndex)"
+                [style.--fall-distance]="fallDistance(tile)"
+                [style.--fall-duration]="fallDuration(tile)"
+                [disabled]="tile.kind === 'empty'"
+                [attr.aria-label]="tileLabel(tile)"
+                (pointerdown)="onPointerDown($event, rowIndex, colIndex, tile)"
+                (pointerenter)="onPointerEnter($event, rowIndex, colIndex)"
+                (pointerup)="onPointerUp($event, rowIndex, colIndex)"
+                (pointerleave)="onPointerLeave(rowIndex, colIndex)"
+                (pointercancel)="onPointerCancel($event)"
+                (click)="handleClickSelection(rowIndex, colIndex)"
+              >
+                <span
+                  class="board-tile__shape"
+                  *ngIf="tile.kind !== 'empty'"
+                  [attr.data-kind]="tile.kind"
+                ></span>
+              </button>
+            </div>
+          </div>
+          <div class="board-rewards" *ngIf="board.pendingRewards.length">
+            <div class="board-reward" *ngFor="let reward of board.pendingRewards">
+              <div class="board-reward__metric">{{ reward.metric }}</div>
+              <div class="board-reward__delta">+{{ reward.delta | number: '1.0-1' }}</div>
+              <div class="board-reward__description">{{ reward.description }}</div>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Recent Events</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-list>
+            <ion-item lines="none" *ngFor="let event of snapshot.pendingEvents | slice:0:5">
+              <ion-label>
+                <div class="event-type">{{ event.type }}</div>
+                <div class="event-body">{{ describeEvent(event) }}</div>
+              </ion-label>
+            </ion-item>
+          </ion-list>
+        </ion-card-content>
+      </ion-card>
+
+      <div class="controls">
+        <ion-button expand="block" color="primary" (click)="pulsePuzzle()">
+          Trigger Puzzle Pulse
+        </ion-button>
+        <ion-button expand="block" fill="outline" (click)="advanceOnce()">
+          Advance One Tick
+        </ion-button>
+      </div>
+    </div>
+  </ion-content>
+</ion-app>

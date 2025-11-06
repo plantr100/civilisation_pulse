@@ -1,0 +1,20 @@
+{
+  "name": "civilisation-emulator",
+  "version": "1.0.0",
+  "description": "Core simulation and puzzle logic for a civilisation emulation mobile app prototype.",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node --experimental-specifier-resolution=node --loader ts-node/esm src/index.ts",
+    "demo": "tsx src/index.ts"
+  },
+  "devDependencies": {
+    "@angular/cli": "^20.3.9",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.7.0",
+    "typescript": "^5.4.0"
+  },
+  "dependencies": {
+    "phaser": "^3.90.0"
+  }
+}

@@ -1,0 +1,266 @@
+.dashboard {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 1.8rem;
+  margin-bottom: 0.25rem;
+}
+
+.subtitle {
+  margin: 0 0 1.5rem;
+  color: var(--ion-color-medium);
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.75rem;
+}
+
+.metric {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.metric__label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  color: var(--ion-color-medium);
+  letter-spacing: 0.05em;
+}
+
+.metric__value {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.board {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.board-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(32px, 1fr));
+  gap: 0.35rem;
+}
+
+.board-tile {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  touch-action: manipulation;
+  box-shadow: 0 0 0 0 transparent;
+  background: rgba(22, 25, 34, 0.92);
+  --tile-color: rgba(255, 255, 255, 0.7);
+  transform: translateY(0);
+  will-change: transform;
+}
+
+.board-tile:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.65);
+  outline-offset: 2px;
+}
+
+.board-tile[disabled] {
+  cursor: default;
+  box-shadow: none;
+  opacity: 0.4;
+}
+
+.board-tile--selected {
+  box-shadow: 0 0 0 3px rgba(255, 200, 80, 0.9), 0 6px 12px rgba(0, 0, 0, 0.35);
+}
+
+.board-tile--swapping {
+  animation: boardTileSwap 0.28s ease-in-out;
+}
+
+.board-tile--invalid {
+  animation: boardTileShake 0.3s ease;
+}
+
+.board-tile--candidate {
+  box-shadow: 0 0 0 2px rgba(86, 197, 255, 0.85);
+}
+
+.board-tile--falling {
+  animation: boardTileFall var(--fall-duration, 220ms) ease-out;
+}
+
+.board-tile[data-kind='energy'] {
+  --tile-color: #f08c00;
+}
+
+.board-tile[data-kind='culture'] {
+  --tile-color: #1c7ed6;
+}
+
+.board-tile[data-kind='knowledge'] {
+  --tile-color: #7048e8;
+}
+
+.board-tile[data-kind='harmony'] {
+  --tile-color: #2f9e44;
+}
+
+.board-tile[data-kind='industry'] {
+  --tile-color: #e03131;
+}
+
+.board-tile[data-kind='wild'] {
+  --tile-color: #f59f00;
+}
+
+.board-tile[data-kind='empty'] {
+  background: transparent;
+  border: 1px dashed rgba(255, 255, 255, 0.25);
+}
+
+.board-tile__shape {
+  width: 70%;
+  height: 70%;
+  background: var(--tile-color);
+  display: block;
+  margin: 0 auto;
+  transform-origin: center;
+}
+
+.board-tile__shape[data-kind='energy'] {
+  border-radius: 50%;
+}
+
+.board-tile__shape[data-kind='culture'] {
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+
+.board-tile__shape[data-kind='knowledge'] {
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+
+.board-tile__shape[data-kind='harmony'] {
+  clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+}
+
+.board-tile__shape[data-kind='industry'] {
+  clip-path: polygon(15% 0, 85% 0, 100% 40%, 85% 100%, 15% 100%, 0 40%);
+}
+
+.board-tile__shape[data-kind='wild'] {
+  clip-path: polygon(50% 0, 63% 28%, 100% 35%, 72% 55%, 82% 100%, 50% 78%, 18% 100%, 28% 55%, 0 35%, 37% 28%);
+}
+
+.board-rewards {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.board-reward {
+  padding: 0.5rem 0.65rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  min-width: 120px;
+  animation: rewardPop 0.35s ease;
+}
+
+.board-reward__metric {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ion-color-medium);
+}
+
+.board-reward__delta {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.board-reward__description {
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+
+@keyframes boardTileSwap {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes boardTileShake {
+  0% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-4px);
+  }
+  40% {
+    transform: translateX(4px);
+  }
+  60% {
+    transform: translateX(-3px);
+  }
+  80% {
+    transform: translateX(3px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes rewardPop {
+  from {
+    transform: translateY(6px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes boardTileFall {
+  from {
+    transform: translateY(calc(var(--fall-distance, 0) * -100%));
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.event-type {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--ion-color-medium);
+}
+
+.event-body {
+  font-size: 0.95rem;
+}
